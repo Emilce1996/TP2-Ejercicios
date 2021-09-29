@@ -1,0 +1,94 @@
+package tp2ejercicio5;
+
+
+public class Evaluador {
+    public static String Operadores(String exp){
+        String datoSalida = "";      
+        for (int i = 0 ; i < exp.length() ; i++){
+            if(esOperador(exp.charAt(i))){
+                datoSalida += exp.charAt(i);
+            }
+        }
+        return datoSalida;
+    }
+    
+    public void EvaluarE(String infija){     
+        String posfija = convertir(infija);
+        posfija = posfija.replaceAll("[()]","");      
+        System.out.println("La expresion postfija es: ");
+        System.out.println(" "+posfija+" ");      
+    }
+    
+    public static String convertir(String infija){
+        String posfija = "";
+        Pila pila = new Pila(100);
+        for (int i = 0; i < infija.length() ; i++){
+            char letra = infija.charAt(i);
+            if(esOperador (infija.charAt(i))){
+                if(pila.PilaVacia()){
+                    pila.Apilar(letra);
+                }
+                else{
+                    int pe = prioridadEnExpresion(letra);
+                    int pp = prioridadEnPila((char)pila.elementoTope());                   
+                    if (pe > pp){
+                        pila.Apilar(letra);
+                    }
+                    else{
+                        posfija += pila.Desapilar();
+                        pila.Apilar(letra);
+                    }
+                }
+            }
+            else{
+                posfija += letra;
+            }
+        }
+        while (!pila.PilaVacia()){
+            posfija += pila.Desapilar();
+        }
+        return posfija;
+    }
+    
+    private static int prioridadEnExpresion (char operador){
+         if (operador == '^') {
+             return 4;
+         }
+         if (operador == '*' || operador == '/') {
+             return 2;
+         }
+         if (operador == '+' || operador == '-') {
+             return 1;
+         }
+         if (operador == '(' ) {
+             return 5;
+         }
+         return 0;
+    }
+    
+    private static int prioridadEnPila (char operador){
+         if (operador == '^') {
+             return 3;
+         }
+         if (operador == '*' || operador == '/') {
+             return 1;
+         }
+         if (operador == '+' || operador == '-') {
+             return 2;
+         }
+         if (operador == '(' ) {
+             return 0;
+         }
+         return 0;
+    }
+      
+    private static boolean esOperador (char letra){
+        if (letra =='^' || letra =='*' || letra =='/' || letra =='+'|| letra =='-' || letra =='(' || letra ==')'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+}
