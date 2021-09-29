@@ -1,0 +1,68 @@
+package tp2ejercicio2;
+import java.util.Scanner;
+
+public class TP2Ejercicio2 {
+
+    
+    public static void main(String args[]) {
+        Scanner read = new Scanner(System.in);
+        System.out.println("Ingrese la expresión matemática:");
+        String x = read.nextLine();
+        System.out.println(x);
+        String array[] = new String[x.length()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = x.substring(i, i + 1);
+        }
+        TP2Ejercicio2 b = new TP2Ejercicio2();
+        boolean value = b.checkBalancedParentheses(array);
+        if (value) {
+                System.out.println("La parentización múltiple de la expresión matemática es correcta.");
+        } else {
+                System.out.println("La parentización múltiple de la expresión matemática es incorrecta.");
+        }
+        read.close();
+    }
+
+    Helper s = new Helper();
+    String paraOpened[] = { "[", "(", "{" };
+    String paraClosed[] = { "]", ")", "}" };
+
+    boolean pairWith(String x) {
+            if (s.top().equals("[") && x.equals("]")) {
+                    return true;
+            } else if (s.top().equals("{") && x.equals("}")) {
+                    return true;
+            } else if (s.top().equals("(") && x.equals(")")) {
+                    return true;
+            }
+            return false;
+    }
+
+    boolean isCounterPart(String x) {
+        for (int i = 0; i < 3; i++) {
+                if (paraOpened[i].equals(x)) {
+                        return true;
+                }
+                if (paraClosed[i].equals(x)) {
+                        return true;
+                }
+        }
+        return false;
+    }
+
+    public boolean checkBalancedParentheses(String array[]) {
+        for (String x : array) {
+            if (x.equals(paraOpened[0]) || x.equals(paraOpened[1]) || x.equals(paraOpened[2])) {
+                s.push(x);
+            } else if (isCounterPart(x)) {
+                if (s.isEmpty() || !pairWith(x)) {
+                    return false;
+                } else {
+                    s.pop();
+                }
+            }
+        }
+        return s.isEmpty();
+    }
+    
+}
